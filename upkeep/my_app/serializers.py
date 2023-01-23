@@ -5,8 +5,6 @@ from my_app.models import User
 from django.utils.encoding import smart_str, force_bytes, force_str, DjangoUnicodeDecodeError
 from django.utils.http import urlsafe_base64_decode, urlsafe_base64_encode
 from django.contrib.auth.tokens import PasswordResetTokenGenerator
-from django_regex.validators import compress
-import re
 
 class UserRegistrationSerializer(serializers.ModelSerializer):
     password2 = serializers.CharField(style={'input_type':'password'}
@@ -32,8 +30,8 @@ class UserRegistrationSerializer(serializers.ModelSerializer):
         if password != password2:
             raise serializers.ValidationError("Password and Confirm Password does not match")
         return attrs"""
-    
-        SpecialSym =['$', '@', '#', '%']
+
+        SpecialSym =['$', '@', '#', '%','!','^','&','*','_','=','+','-']
 
         if len(username) < 5 :
             raise serializers.ValidationError("Username must have 6 character")
@@ -95,12 +93,12 @@ class SendPasswordResetEmailSerializer(serializers.Serializer):
         link = 'http://localhost:3000/api/user/reset/'+uid+'/'+token
         print('Password Reset Link', link)
         # Send EMail
-        """body = 'Click Following Link to Reset Your Password '+link
+        body = 'Click Following Link to Reset Your Password '+link
         data = {
             'subject':'Reset Your Password',
             'body':body,
             'to_email':user.email
-        }"""
+        }
         return attrs
     else:
       raise serializers.ValidationError('You are not a Registered User')
