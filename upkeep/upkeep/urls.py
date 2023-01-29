@@ -8,6 +8,4 @@ urlpatterns = [
     path('api/user/',include('properties.urls')),
 
     path('oauth', include('social_django.urls', namespace='social')),
-    path('api/auth/oauth', include('my_app.urls'))
-    
 ]
