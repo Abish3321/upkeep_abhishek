@@ -112,7 +112,7 @@ class upkeeppS():
                 password2 = attrs.get('password2')
                 uid = self.context.get('uid')
                 token = self.context.get('token')
-                SpecialSym =['$', '@', '#', '%']
+                SpecialSym =['$', '@', '#', '%','!','^','&','*','_','=','+','-']
 
                 if len(password) < 6:
                     raise serializers.ValidationError('Password length should be at least 6')

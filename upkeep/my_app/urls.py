@@ -2,6 +2,7 @@ from django.urls import path
 from django.contrib.auth import views  as auth_views
 from my_app.views import upkeepp, UserLoginView, UserRegistrationView
 
+
 urlpatterns = [
     path('register', UserRegistrationView.as_view(), name='register'),
     path('login', UserLoginView.as_view(), name='login'),

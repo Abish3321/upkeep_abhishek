@@ -45,7 +45,8 @@ INSTALLED_APPS = [
     'rest_framework_simplejwt',
     'social_django',
     'corsheaders',
-    'properties'
+    'properties',
+    'repair_contact'
     
 ]
 

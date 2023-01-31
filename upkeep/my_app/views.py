@@ -38,8 +38,7 @@ class UserRegistrationView(APIView):
         serializer = UserRegistrationSerializer(data= request.data)
         if serializer.is_valid(raise_exception=True):
             user = serializer.save()
-            return Response({'msg':'Registration Successful'},
-            status = status.HTTP_201_CREATED)
+            return Response({'msg':'Registration Successful'}, status = status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 #For Login..................
 class UserLoginView(APIView):
@@ -48,6 +47,11 @@ class UserLoginView(APIView):
         serializer = UserLoginSerializer(data = request.data)
         if serializer.is_valid(raise_exception=True):
             username = serializer.data.get('username')
+            """if '.com' in usern:
+                username = {'email': username}
+            else:
+                username = {'username': username}"""
+                
             password = serializer.data.get('password')
             user = authenticate(username=username, password = password)
             if user is not None:
@@ -148,7 +152,7 @@ class upkeepp():
                 payload = jwt_payload_handler(user)
                 token = jwt_encode_handler(payload)
                 
-                upkeeppS.UserLoginView(request, authenticated_user)
+                upkeepp.UserLoginView(request, authenticated_user)
                 data={
                 
                     "token": token #jwt_encode_handler(jwt_payload_handler(user))
