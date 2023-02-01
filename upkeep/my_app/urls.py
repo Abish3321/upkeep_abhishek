@@ -9,6 +9,8 @@ urlpatterns = [
     path('profile', upkeepp.UserProfileView.as_view(), name='profile'),
     path('SendResetPasswordEmail', upkeepp.SendPasswordResetEmailView.as_view(), name='SendResetPasswordEmail'),
     path('resetPassword/<uid>/<token>', upkeepp.UserPasswordResetView.as_view(), name = 'reset-Password'),
+    
+    path('chat', upkeepp.MessageAPIView.as_view() ),
 
     path('oauth/login', upkeepp.SocialLoginView.as_view())
 

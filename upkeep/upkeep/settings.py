@@ -28,7 +28,7 @@ SECRET_KEY = 'django-insecure-vud+9j97(y+jw21e4n=n7+jw#h!tm90wai_=bgyzux%ym2e#$4
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*']
 
 
 # Application definition
@@ -46,7 +46,8 @@ INSTALLED_APPS = [
     'social_django',
     'corsheaders',
     'properties',
-    'repair_contact'
+    'repair_contact',
+    'eprofile'
     
 ]
 

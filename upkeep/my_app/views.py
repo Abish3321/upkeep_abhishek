@@ -19,6 +19,10 @@ from social_core.backends.oauth import BaseOAuth2
 from social_core.exceptions import MissingBackend, AuthTokenError, AuthForbidden
 from . import serializers
 
+from django.db.models import Q 
+from my_app.models import User
+from rest_framework.exceptions import NotFound
+from my_app.pusher import pusher_client
 
 
 
@@ -45,21 +49,30 @@ class UserLoginView(APIView):
     renderer_classes = [UserRenderer]
     def post(self, request, format=None):
         serializer = UserLoginSerializer(data = request.data)
-        if serializer.is_valid(raise_exception=True):
-            username = serializer.data.get('username')
-            """if '.com' in usern:
-                username = {'email': username}
-            else:
-                username = {'username': username}"""
-                
-            password = serializer.data.get('password')
-            user = authenticate(username=username, password = password)
-            if user is not None:
-                token = get_tokens_for_user(user)
-                return Response({'token':token, 'msg':'Login Success'}, status=status.HTTP_200_OK)
-            else:
-                return Response({'errors':{'non_field_errors':['Username or Password is not valid']}}, status=status.HTTP_404_NOT_FOUND)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        if serializer.is_valid(raise_exception= True):
+           email = serializer.data.get('email')
+           username = serializer.data.get('username')
+           password = serializer.data.get('password')
+           
+           try:
+                user = User.objects.get(Q(username=username)|Q(email=username)) 
+           except User.DoesNotExist:
+               raise NotFound('User does not exist')
+           
+           # return Response({"error":"user not found"})
+           
+
+           #if user != User.objects.get(username,password):
+            #return Response({"errors":'username or password not valid'},status =status.HTTP_404_NOT_FOUND)
+           user = authenticate(username = user, password=password)
+           
+           if user is not None:
+               token = get_tokens_for_user(user)
+               return Response({"Token":token,"msg":"Login Successful"},status =status.HTTP_201_CREATED)
+           else:
+               return Response({"errors":'username or password not valid'},status =status.HTTP_404_NOT_FOUND)
+        return Response(serializer.errors, status = status.HTTP_400_BAD_REQUEST)
+    
 
 class upkeepp():
     
@@ -165,3 +178,15 @@ class upkeepp():
                 }
                 return Response(status=status.HTTP_200_OK, data=response)
 
+    class MessageAPIView(APIView):
+        
+        def post(self,request):
+            try:
+                pusher_client.trigger('chat', 'message',{
+                        
+                        'username': request.data['username'],
+                        'message': request.data['message'],
+                        })      
+            except KeyError:
+                return Response({'error': "enter username and message"}, status=404)
+            return Response({"msg":"message successfully sent"},status=200)
